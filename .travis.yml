@@ -1,22 +1,23 @@
 sudo: required
+language: generic
+
 services:
   - docker
 
 before_install:
-  - docker build -t kejin227/react-test -f ./client/Dockerfile.dev ./client
+  - docker build -t cygnetops/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run -e CI=true kejin227/react-test npm run test
-
+  - docker run -e CI=true cygnetops/react-test npm test
 after_success:
-  - docker build -t kejin227/multi-client ./client
-  - docker build -t kejin227/multi-nginx ./nginx
-  - docker build -t kejin227/multi-server ./server
-  - docker build -t kejin227/multi-worker ./worker
+  - docker build -t cygnetops/multi-client ./client
+  - docker build -t cygnetops/multi-nginx ./nginx
+  - docker build -t cygnetops/multi-server ./server
+  - docker build -t cygnetops/multi-worker ./worker
+  # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push kejin227/multi-client
-  - docker push kejin227/multi-nginx
-  - docker push kejin227/multi-server
-  - docker push kejin227/multi-worker
-
-
+  # Take those images and push them to docker hub
+  - docker push cygnetops/multi-client
+  - docker push cygnetops/multi-nginx
+  - docker push cygnetops/multi-server
+  - docker push cygnetops/multi-worker
